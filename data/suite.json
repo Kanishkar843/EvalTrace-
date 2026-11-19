@@ -1,0 +1,221 @@
+[
+  {
+    "id": "case-0",
+    "prompt": "What powers the demo?",
+    "relevant_ids": [
+      "doc-0"
+    ],
+    "expected_tools": [
+      {
+        "name": "retrieve",
+        "arguments": {
+          "query": "What powers the demo?"
+        }
+      }
+    ],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "answer"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "answer": "The demo uses synthetic fixtures",
+      "structured": {
+        "answer": "The demo uses synthetic fixtures"
+      },
+      "tools": [
+        {
+          "name": "retrieve",
+          "arguments": {
+            "query": "What powers the demo?"
+          }
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "doc-0",
+          "text": "The demo uses synthetic fixtures"
+        }
+      ],
+      "citations": [
+        "doc-0"
+      ],
+      "completed": true
+    },
+    "regressed_fixture": {
+      "answer": "An unsupported assertion",
+      "structured": {
+        "wrong": true
+      },
+      "tools": [
+        {
+          "name": "wrong_tool",
+          "arguments": {}
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "irrelevant",
+          "text": "Unrelated data"
+        }
+      ],
+      "citations": [
+        "missing"
+      ],
+      "completed": false
+    }
+  },
+  {
+    "id": "case-1",
+    "prompt": "Where is memory stored?",
+    "relevant_ids": [
+      "doc-1"
+    ],
+    "expected_tools": [
+      {
+        "name": "retrieve",
+        "arguments": {
+          "query": "Where is memory stored?"
+        }
+      }
+    ],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "answer"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "answer": "Memory is stored in SQL",
+      "structured": {
+        "answer": "Memory is stored in SQL"
+      },
+      "tools": [
+        {
+          "name": "retrieve",
+          "arguments": {
+            "query": "Where is memory stored?"
+          }
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "doc-1",
+          "text": "Memory is stored in SQL"
+        }
+      ],
+      "citations": [
+        "doc-1"
+      ],
+      "completed": true
+    },
+    "regressed_fixture": {
+      "answer": "An unsupported assertion",
+      "structured": {
+        "wrong": true
+      },
+      "tools": [
+        {
+          "name": "wrong_tool",
+          "arguments": {}
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "irrelevant",
+          "text": "Unrelated data"
+        }
+      ],
+      "citations": [
+        "missing"
+      ],
+      "completed": false
+    }
+  },
+  {
+    "id": "case-2",
+    "prompt": "How are writes approved?",
+    "relevant_ids": [
+      "doc-2"
+    ],
+    "expected_tools": [
+      {
+        "name": "retrieve",
+        "arguments": {
+          "query": "How are writes approved?"
+        }
+      }
+    ],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "answer"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "answer": "Writes require explicit human approval",
+      "structured": {
+        "answer": "Writes require explicit human approval"
+      },
+      "tools": [
+        {
+          "name": "retrieve",
+          "arguments": {
+            "query": "How are writes approved?"
+          }
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "doc-2",
+          "text": "Writes require explicit human approval"
+        }
+      ],
+      "citations": [
+        "doc-2"
+      ],
+      "completed": true
+    },
+    "regressed_fixture": {
+      "answer": "An unsupported assertion",
+      "structured": {
+        "wrong": true
+      },
+      "tools": [
+        {
+          "name": "wrong_tool",
+          "arguments": {}
+        }
+      ],
+      "retrieved": [
+        {
+          "id": "irrelevant",
+          "text": "Unrelated data"
+        }
+      ],
+      "citations": [
+        "missing"
+      ],
+      "completed": false
+    }
+  }
+]
