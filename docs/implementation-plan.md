@@ -6,3 +6,5 @@
 - Completed: original React studio, JSONL journeys, policy controls and authentic responsive screenshots.
 - Completed: native/frontend/real PostgreSQL/Docker startup-restart checks; optional live provider blocked by missing credentials.
 - Pending: feature-branch push, GitHub Actions verification and final delivery references.
+
+Delivery milestone: tested feature branch pushed and PR created. Final live CI state is linked from README; optional provider checks remain explicitly blocked without credentials.

@@ -81,3 +81,7 @@ Fixture baselines score 1 on the six original benefit gates; the deliberately re
 [Architecture](docs/ARCHITECTURE.md) · [Schema](docs/DATABASE_ERD.md) · [Metrics](docs/METRICS.md) · [Trace schema](docs/TRACE_SCHEMA.md) · [API](docs/API_REFERENCE.md) · [Deployment](docs/DEPLOYMENT.md) · [Resume verification](docs/RESUME_VERIFICATION.md) · [Attribution](docs/DEPENDENCIES_AND_ATTRIBUTION.md)
 
 Destination: https://github.com/Kanishkar843/EvalTrace-. Delivery uses a feature branch preserving remote main. First-party source and designs were authored for this assignment; dependencies retain their notices. No project license is assigned without the owner's choice.
+
+## GitHub delivery
+
+Published branch: `feat/durable-evaluation-react`. [Review pull request](https://github.com/Kanishkar843/EvalTrace-/pull/1) · [Current CI results](https://github.com/Kanishkar843/EvalTrace-/actions). Main was not force-pushed or overwritten. Local acceptance evidence is recorded separately from GitHub checks.
