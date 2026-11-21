@@ -62,8 +62,28 @@ class Engine:
         cases = [Case.model_validate(x) for x in raw]
         if not cases or len({c.id for c in cases}) != len(cases):
             raise ValueError("Cases must have unique IDs and dataset must not be empty")
+        from jsonschema.exceptions import SchemaError
+
+        def local_refs(value):
+            if isinstance(value, dict):
+                for key in ("$ref", "$dynamicRef", "$recursiveRef"):
+                    ref = value.get(key)
+                    if isinstance(ref, str) and not ref.startswith("#"):
+                        raise ValueError(
+                            "External JSON Schema references are not allowed"
+                        )
+                for child in value.values():
+                    local_refs(child)
+            elif isinstance(value, list):
+                for child in value:
+                    local_refs(child)
+
         for case in cases:
-            Draft202012Validator.check_schema(case.output_schema)
+            local_refs(case.output_schema)
+            try:
+                Draft202012Validator.check_schema(case.output_schema)
+            except SchemaError:
+                raise ValueError("Invalid output JSON Schema") from None
         payload = json.dumps([c.model_dump() for c in cases], sort_keys=True)
         version = hashlib.sha256(payload.encode()).hexdigest()
         identity = str(uuid4())

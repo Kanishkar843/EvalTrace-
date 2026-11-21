@@ -74,3 +74,16 @@ def test_unavailable_judge_not_fabricated(engine, raw):
     d = engine.register("demo", raw)
     r = engine.execute(d["id"], "fixture-baseline")
     assert "not configured" in r["judge"] and r["tokens"] is None and r["cost"] is None
+
+
+def test_schema_errors_and_external_refs_are_rejected(engine, raw):
+    import copy
+
+    invalid = copy.deepcopy(raw)
+    invalid[0]["output_schema"] = {"type": "not-a-json-type"}
+    with pytest.raises(ValueError, match="Invalid output JSON Schema"):
+        engine.register("invalid-schema", invalid)
+    remote = copy.deepcopy(raw)
+    remote[0]["output_schema"] = {"$ref": "https://example.org/schema"}
+    with pytest.raises(ValueError, match="External JSON Schema"):
+        engine.register("remote-schema", remote)

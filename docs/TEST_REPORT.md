@@ -4,7 +4,7 @@ Updated 2026-11-22. This supersedes the initial native/static demo report.
 
 | Command/check | Actual result |
 |---|---|
-| `python -m pytest -q tests` | PASS: 13 tests, 4.69 seconds |
+| `python -m pytest -q tests` | PASS: 14 tests, 4.67 seconds |
 | `python -m pytest -q integration` | PASS: 1 real PostgreSQL recovery/concurrency test, 4.87 seconds |
 | TypeScript typecheck / ESLint | PASS |
 | Vitest | PASS: 2 tests |

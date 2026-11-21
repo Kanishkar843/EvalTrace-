@@ -7,3 +7,5 @@ Remote endpoints are trusted operator configuration, not request-supplied URLs. 
 Typed bounds and JSON Schema validate imported cases/outputs; SQL uses bound parameters. Dataset and provider content is untrusted and is rendered as text by React. Worker leases fence database writes; external calls may execute more than once after process death, so targets should be idempotent and read-only. No tools execute from imported trace declarations. Do not import private datasets into a public repository.
 
 Secrets are ignored and scanned for known local credential values/private-key/token patterns before publication. This is a limited source scan, not a full security audit. Container API runs nonroot and exposes only loopback. No production compliance or definitive grounding guarantee is claimed.
+
+Imported JSON Schemas reject external `$ref` URLs and report malformed schemas as validation errors. Local fragment references remain supported; evaluation does not fetch arbitrary schema URLs.
