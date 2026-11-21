@@ -1,9 +1,9 @@
-# Security scope
+# Local-studio security boundaries
 
-Local demo only; bind to 127.0.0.1. Tokens and database URLs belong in process environment or ignored .env files. No credentials or resumes were used as fixtures. Browser rendering uses textContent rather than HTML injection. SQL parameters are bound, not concatenated from input.
+Operator routes use constant-time comparison against ADMIN_TOKEN; all datasets/traces/policies require it. This shared-secret model is explicitly single-operator and not multi-tenant authentication. Tokens are supplied through headers and are not saved in browser screenshots. The UI stores its token only in component memory.
 
-PrefLoom sessions store token hashes. Preference/profile writes from the agent create approval records; an authenticated approval endpoint applies them. User IDs are not accepted as authority from request bodies. Direct forgetting is an explicit authenticated user action.
+Remote endpoints are trusted operator configuration, not request-supplied URLs. Local HTTP is loopback-only; remote/provider endpoints require HTTPS without URL credentials, disable redirects, verify TLS, and use bounded attempts/timeouts. The Windows trust store avoids a native SSL initialization issue. Provider failure traces retain exception class only, not credential values or raw response errors.
 
-DeltaIndex/EvalTrace use a single operator token; they are not multi-tenant systems. No internet-facing auth, TLS termination, account recovery or key rotation is supplied. EvalTrace HTTP target URLs are restricted to loopback and redirects are disabled. Dataset content may contain sensitive text: use only synthetic fixtures until access/retention policies are implemented.
+Typed bounds and JSON Schema validate imported cases/outputs; SQL uses bound parameters. Dataset and provider content is untrusted and is rendered as text by React. Worker leases fence database writes; external calls may execute more than once after process death, so targets should be idempotent and read-only. No tools execute from imported trace declarations. Do not import private datasets into a public repository.
 
-Do not deploy publicly without authentication review, resource/request limits, concurrency tests, backups, dependency scanning and required PostgreSQL integration checks. No production security certification is claimed.
+Secrets are ignored and scanned for known local credential values/private-key/token patterns before publication. This is a limited source scan, not a full security audit. Container API runs nonroot and exposes only loopback. No production compliance or definitive grounding guarantee is claimed.

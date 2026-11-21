@@ -9,3 +9,5 @@ Official documentation consulted for API patterns:
 - https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html
 
 No nontrivial tutorial implementation was copied. This list is not a legal audit; consult each installed distribution's license files. A generated package inventory is recorded in dependencies.json when available.
+
+The React/TypeScript implementation, CSS, tests and diagrams are original first-party work, sharing first-party CSS primitives across the three projects. React, React DOM, Vite, TypeScript, Vitest and ESLint are pinned in frontend/package-lock.json. PostgreSQL, SQLAlchemy, psycopg, Alembic, Pydantic, jsonschema, FastAPI, HTTPX, truststore and test tools retain their packaged notices. No model weights or third-party visual assets are redistributed. There is no project-level license pending the owner's choice.

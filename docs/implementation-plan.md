@@ -1,11 +1,8 @@
-# Milestones and acceptance status
+# Completion checkpoints
 
-- [x] Inspect host, create isolated target folders, retain matching source prompt.
-- [x] Implement native domain workflow and API with deterministic fixtures.
-- [x] Run native backend tests and JavaScript syntax checks.
-- [ ] Verify all required database features in PostgreSQL (and pgvector/Redis for DeltaIndex).
-- [ ] Complete every remaining feature listed in README and MASTER_PROMPT.
-- [ ] Run Docker build, migrations, persistence after restart and full workflow.
-- [ ] Execute CI and safely integrate with existing target GitHub history.
-
-Browser outcomes are recorded in TEST_REPORT. This checklist intentionally does not mark the master-prompt assignment complete.
+- Completed: preserve original endpoints/data and freeze additive migrations.
+- Completed: durable queue, checkpointed evidence, owner fencing and real PostgreSQL killed-worker recovery.
+- Completed: typed adapters, structured/tool/retrieval/citation/claim evaluation and reproducible release gates.
+- Completed: original React studio, JSONL journeys, policy controls and authentic responsive screenshots.
+- Completed: native/frontend/real PostgreSQL/Docker startup-restart checks; optional live provider blocked by missing credentials.
+- Pending: feature-branch push, GitHub Actions verification and final delivery references.

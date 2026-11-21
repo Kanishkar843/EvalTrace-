@@ -1,24 +1,25 @@
-# Test report
+# Executed acceptance report
 
-Date: 2026-11-20, Asia/Kolkata.
+Updated 2026-11-22. This supersedes the initial native/static demo report.
 
-| Check | Status | Evidence |
-|---|---|---|
-| Native pytest | PASSED | 6 passed in 10.02s (one upstream TestClient deprecation warning) |
-| JavaScript syntax | PASSED | node --check app/static/app.js |
-| PostgreSQL integration | BLOCKED | No running PostgreSQL service provisioned |
-| Docker/Compose build and workflow | BLOCKED | Docker not available; WSL not installed |
-| Provider model checks | NOT RUN | No live provider mode executed |
-| CI execution | NOT RUN | No push |
-| GitHub publication | BLOCKED | Full mandatory offline checks have not passed |
-| RAM/CPU benchmark | NOT RUN | No resource-performance claims |
+| Command/check | Actual result |
+|---|---|
+| `python -m pytest -q tests` | PASS: 13 tests, 4.69 seconds |
+| `python -m pytest -q integration` | PASS: 1 real PostgreSQL recovery/concurrency test, 4.87 seconds |
+| TypeScript typecheck / ESLint | PASS |
+| Vitest | PASS: 2 tests |
+| Vite production build | PASS |
+| Ruff selected correctness rules | PASS |
+| React Chrome browser journey | PASS; desktop/light/mobile captured |
+| Docker image build / Compose readiness | PASS |
+| Docker queued-run restart persistence | PASS |
+| Docker baseline / regressed evaluation / comparison | PASS; intentional regression correctly blocked |
+| CLI baseline / regressed exit codes | PASS: 0 / 1, verified natively and inside Docker |
+| Live provider / configured remote endpoint | BLOCKED: no credentials/configured service; transport test is mocked |
+| GitHub CI/publication | Pending feature-branch delivery |
 
-Native pytest checks are reproducible from README. Browser results are appended after execution. This report distinguishes software tests from the expected failure of EvalTrace's regressed release gate.
+Real PostgreSQL test: apply frozen migrations, queue a run, start an owned subprocess, kill it while the second case is in flight after the first checkpoint, accelerate the 90-second lease deadline, recover using a new Engine, verify exactly one stored output per case, reproduce scores, compare a deliberate regression, and race two workers for one job. Actual worker death is not simulated; lease time is shortened for test speed. PostgreSQL is 17.12. Native SQLite tests are listed separately.
 
-## Browser and migration evidence
+Browser tests exercise unauthorized access, suite registration, durable run launch, baseline pass, deliberately blocked regression, stored comparison, failed tools/citation evidence, policy editing, invalid and valid JSONL imports, and responsive dark/light themes. No page errors or horizontal mobile overflow. Screenshots are actual UI captures under docs/assets. An initial selector failure exposed ambiguous comparison labels; explicit accessible labels corrected it before the passing run.
 
-- PASSED: one sequential Playwright journey in installed Chrome, 1440px desktop and 390px mobile, dark/light screenshots, no uncaught page errors, no horizontal mobile overflow.
-- Screenshots: docs/assets/desktop.png, docs/assets/light.png, docs/assets/mobile.png.
-- PASSED: native SQLite `python -m alembic upgrade head`; this does not verify PostgreSQL.
-- Browser verified dataset registration, baseline pass, deliberately regressed release block, comparison delta and failed trace inspection. CLI baseline exited 0 and regressed target exited 1.
-- PASSED: source scan for private-key and common provider/GitHub-token prefixes found no matches. This is a limited pattern scan, not a full security audit.
+One upstream Starlette warning reports deprecation of its HTTPX TestClient integration; tests pass. The initial test invocation used the wrong working directory and failed collection; rerunning from the documented project root resolved it. No failed run is counted as a passing test. Live-provider usage/cost is not invented; fixture durations are not LLM latency benchmarks. docker-test-output.txt and postgres-test-output.txt preserve service evidence.

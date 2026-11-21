@@ -1,23 +1,16 @@
 # Workflows
 
-1. Validated immutable dataset versions using SHA-256 content identity.
-2. JSON Schema validity, exact tool name/arguments, Recall@5 and nDCG@10.
-3. Citation-reference validity and explicitly heuristic grounded-token overlap.
-4. Fixture and restricted loopback HTTP target adapters; actual measured case duration.
-5. Stored runs, policy snapshots, baseline/candidate comparison and CLI pass/block exit status.
+1. Connect with operator token; register the synthetic suite or import typed JSONL.
+2. Inspect immutable cases and select a dataset version/adapter.
+3. Queue a durable job; process it from the UI or continuous worker.
+4. Poll actual stored case progress; inspect scorecards and gate result.
+5. Compare completed runs with matching content/metric versions.
+6. Open a failed case to inspect structured output, tool arguments, retrieval ranking, missing citations and claim-support evidence.
+7. Edit future-run gate floors; retain past policy snapshots.
 
 ```mermaid
-sequenceDiagram
-participant User
-participant UI
-participant API
-participant DB
-User->>UI: Submit validated input
-UI->>API: Request
-API->>DB: Read or transaction
-DB-->>API: Stored evidence
-API-->>UI: Actual result or explicit error
-UI-->>User: Inspect evidence
+flowchart LR
+    Import --> Validate --> Version --> Queue --> Claim --> Execute --> Score --> Checkpoint --> Aggregate --> Gate --> Compare
 ```
 
-The full acceptance workflow remains in MASTER_PROMPT.md. A native success does not establish Docker, cloud or provider success.
+A killed worker resumes after lease expiry, skipping committed cases. A failed target becomes a sanitized exception trace and fails appropriate metrics; no fabricated successful output replaces it.

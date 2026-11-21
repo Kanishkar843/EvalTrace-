@@ -1,23 +1,56 @@
-name: Native checks
+name: EvalTrace acceptance
 on: [push, pull_request]
 jobs:
-  native:
+  acceptance:
     runs-on: ubuntu-latest
+    env:
+      COMPOSE_PROJECT_NAME: evaltrace
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: evaltrace
+          POSTGRES_DB: evaltrace_test
+          POSTGRES_PASSWORD: ${{ github.run_id }}
+          ADMIN_TOKEN: ${{ github.run_id }}-local-ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U evaltrace -d evaltrace_test"
+          --health-interval 5s --health-retries 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+        with: {python-version: '3.12'}
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+        with: {node-version: '22'}
       - run: pip install -r requirements.lock
-      - run: python -m pytest -q
-      - run: node --check app/static/app.js
-      - run: python -m app.cli --target fixture-baseline
-      - name: Assert regressed fixture blocks release
-        run: |
-          set +e
-          python -m app.cli --target fixture-regressed
-          code=$?
-          test "$code" -eq 1
+      - run: npm ci --prefix frontend
+      - run: npm run typecheck --prefix frontend && npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend
+      - run: python -m ruff check app tests integration --select E9,F63,F7,F82
+      - run: python -m pytest -q tests
+      - run: python -m pytest -q integration
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://evaltrace:${{ github.run_id }}@localhost:5432/evaltrace_test
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/browser_journey.py
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: docker compose build
+        env:
+          POSTGRES_PASSWORD: ${{ github.run_id }}
+          ADMIN_TOKEN: ${{ github.run_id }}-local-ci
+      - run: docker compose up -d --wait
+        env:
+          POSTGRES_PASSWORD: ${{ github.run_id }}
+          ADMIN_TOKEN: ${{ github.run_id }}-local-ci
+      - run: python tests/compose_acceptance.py
+        env:
+          POSTGRES_PASSWORD: ${{ github.run_id }}
+          ADMIN_TOKEN: ${{ github.run_id }}-local-ci
+          ACCEPTANCE_URL: http://127.0.0.1:8002
+          COMPOSE_PROJECT_NAME: evaltrace
+      - if: always()
+        run: docker compose down
+        env:
+          POSTGRES_PASSWORD: ${{ github.run_id }}
+          ADMIN_TOKEN: ${{ github.run_id }}-local-ci

@@ -1,11 +1,17 @@
 {
-  "project": "EvalTrace",
-  "browser": "installed Chrome, headless Playwright",
   "status": "PASSED",
-  "screenshots": [
-    "docs/assets/desktop.png",
-    "docs/assets/light.png",
-    "docs/assets/mobile.png"
+  "frontend": "React TypeScript",
+  "backend": "SQLite deterministic traces; PostgreSQL recovery tested separately",
+  "checks": [
+    "authorization rejection",
+    "baseline pass",
+    "regressed gate block",
+    "comparison",
+    "failed trace evidence",
+    "policy save",
+    "JSONL validation",
+    "JSONL import",
+    "dark/light/mobile"
   ],
-  "console_errors": []
+  "page_errors": []
 }
