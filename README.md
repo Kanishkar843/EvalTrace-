@@ -1,21 +1,119 @@
 # EvalTrace
 
-[Open live application](https://evaltrace-liart.vercel.app) · [Interactive API](https://evaltrace-liart.vercel.app/docs) · [Cloud verification](docs/CLOUD_DELIVERY.md)
+### Evaluate agent behavior. Inspect failures. Gate releases with evidence.
 
-Production uses Neon PostgreSQL for immutable datasets, traces, durable queues and checkpoints. Authenticated worker steps execute queued jobs within bounded requests. Groq GPT-OSS 20B is available as an evaluation target; a live target can fail quality gates without being hidden or relabeled as a passing fixture.
+[![Acceptance CI](https://github.com/Kanishkar843/EvalTrace-/actions/workflows/checks.yml/badge.svg?branch=feat/durable-evaluation-react)](https://github.com/Kanishkar843/EvalTrace-/actions/workflows/checks.yml)
 
-![Verified production interface](docs/assets/production-desktop.png)
+**[Live application ↗](https://evaltrace-liart.vercel.app) · [Interactive API](https://evaltrace-liart.vercel.app/docs) · [Verification report](docs/CLOUD_DELIVERY.md) · [Review PR](https://github.com/Kanishkar843/EvalTrace-/pull/1)**
 
+EvalTrace is an evaluation studio for immutable datasets, typed traces and reproducible release decisions. PostgreSQL stores durable jobs and per-case checkpoints, while the interface exposes model outputs, tool calls, retrieval evidence, metric scores and baseline/candidate regressions.
 
-An original evaluation studio for versioned datasets, durable execution, typed traces and reproducible release gates.
+## Production preview
 
-React/TypeScript presents stored run progress, metric scorecards, baseline/candidate comparisons, failure evidence and gate-policy editing. FastAPI and PostgreSQL persist execution checkpoints; workers recover interrupted jobs using expiring leases and ownership checks. Offline fixture mode is complete without provider credentials.
+![EvalTrace running on Vercel](docs/assets/production-desktop.png)
 
-![Running evaluation studio](docs/assets/desktop.png)
+Captured from the deployed application. The galleries below show separately captured local test journeys.
 
-## Windows quickstart
+<details>
+<summary>View light theme and mobile screenshots</summary>
 
-Python 3.12 and Node 22 are used. Run only one project stack at a time.
+### Light theme — local browser test
+
+![EvalTrace light theme](docs/assets/light.png)
+
+### Mobile layout — local browser test
+
+<img src="docs/assets/mobile.png" alt="EvalTrace mobile interface" width="390" />
+
+</details>
+
+## Capabilities
+
+- **Typed evaluation data:** versioned cases, JSONL import, model outputs, tool calls, retrieved documents and citations.
+- **Durable execution:** 90-second leases, ownership fencing and atomic checkpoints; interrupted workers resume without duplicating completed cases.
+- **Measured quality:** JSON Schema validity, exact ordered tool correctness, Recall@5, nDCG@10, citation validity and grounding heuristics.
+- **Release decisions:** stored policy snapshots, failure investigation, baseline/candidate deltas and CLI quality gates.
+- **Target adapters:** deterministic fixtures, bounded HTTP targets and real Groq structured-output execution.
+- **Evaluation studio:** progress dashboards, trace inspection, policy editing and responsive dark/light themes.
+
+## Scores and verification
+
+**Evidence snapshot: 24 November 2026.** Scores describe the recorded runs, not a live uptime or quality guarantee.
+
+### Recorded live Groq evaluation
+
+The latest stored provider run evaluated **3 cases** with `openai/gpt-oss-20b`. **Its release gate failed.** Execution success is distinct from model-quality acceptance.
+
+| Metric | Recorded score |
+|---|---:|
+| Structured-output validity | **66.67% (2/3)** |
+| Tool correctness | **0%** |
+| Recall@5 | **1.0000** |
+| nDCG@10 | **1.0000** |
+| Citation-reference validity | **100%** |
+| Heuristic citation support | **100%** |
+| Task completion | **100%** |
+| Exception rate | **0%** |
+| Observed token usage | **2,318** |
+| Release gate | **FAILED** |
+
+[Full provider result](docs/production-provider-result.json) · [Metric definitions](docs/METRICS.md)
+
+The text-only provider target performs no retrieval tool calls and must not invent them. Its zero tool score remains visible. Grounding uses lexical, numeric and negation checks; a high score is not proof of semantic entailment. Cost was not observed and is not reported.
+
+The deterministic baseline passes the six configured benefit gates; the deliberately regressed fixture fails. These are controlled fixtures for testing the evaluator, not production model statistics.
+
+### Engineering checks
+
+| Check | Verified result |
+|---|---|
+| Backend unit tests | **14 passed** |
+| Frontend unit tests | **2 passed** |
+| Real-service integration | **Passed** — PostgreSQL |
+| TypeScript / ESLint / production build | **Passed** |
+| Browser journeys | **Passed** — local and deployed workflows |
+| Docker Compose | **Passed** — build, readiness and restart acceptance |
+| Recorded GitHub acceptance run | [**Passed**](https://github.com/Kanishkar843/EvalTrace-/actions/runs/45410197303) |
+
+[Detailed test evidence](docs/TEST_REPORT.md) · [Cloud checks and limitations](docs/CLOUD_DELIVERY.md) · [Resume-claim verification](docs/RESUME_VERIFICATION.md)
+
+## Architecture
+
+```mermaid
+flowchart LR
+    UI[React evaluation studio] --> API[FastAPI on Vercel]
+    API --> DB[(Neon datasets and durable queue)]
+    DB --> Worker[Lease-based worker step]
+    Worker --> Target[Fixture, HTTP or Groq target]
+    Target --> Metrics[Schema, tools, retrieval and grounding]
+    Metrics --> Checkpoint[Atomic case checkpoint]
+    Checkpoint --> DB
+    DB --> Gate[Policy and regression gates]
+    Gate --> UI
+```
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant API as Evaluation API
+    participant DB as PostgreSQL
+    participant Worker
+    participant Target
+    User->>API: Queue dataset and target
+    API->>DB: Persist job and policy snapshot
+    Worker->>DB: Claim lease
+    loop Remaining cases
+        Worker->>Target: Execute case
+        Target-->>Worker: Observed trace
+        Worker->>DB: Score and checkpoint case
+    end
+    Worker->>DB: Finalize metrics and release gate
+    API-->>User: Results and failure evidence
+```
+
+## Run locally
+
+Use Python 3.12 and Node 22 for the documented local workflow. Run one project stack at a time.
 
 ```powershell
 cd K:\Projects\EvalTrace
@@ -27,68 +125,71 @@ $env:ADMIN_TOKEN='choose-a-local-secret'
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8002
 ```
 
-Open http://127.0.0.1:8002. Connect with the local token, register the synthetic suite, run the baseline, run the deliberately regressed target, compare releases and inspect a failed case. Native default storage is explicitly SQLite. PostgreSQL requires DATABASE_URL and `python -m alembic upgrade head`. For a continuously running worker use `python -m app.worker`; the UI also exposes an authenticated single worker step. Existing static journeys remain at `/legacy`.
+Open http://127.0.0.1:8002. Connect with your operator token, register the synthetic suite, run the baseline and regressed targets, compare releases and inspect failed cases. Select the provider adapter to evaluate observed model outputs.
 
-## Implemented and verified
+The API serves the compiled React frontend; `/docs` exposes OpenAPI and `/legacy` preserves the original interface. Native defaults use SQLite for an explicit local demo. To use PostgreSQL, configure `DATABASE_URL`, then run `python -m alembic upgrade head`. For frontend development, use `npm run dev --prefix frontend` with the API running.
 
-- Immutable typed datasets and JSONL import; content hashes identify versions.
-- Durable queued jobs, policy snapshots, 90-second leases, worker ownership fencing and transactional per-case checkpoints.
-- Normalized outputs, tools, retrieved documents, citations, metric scores and comparison records.
-- JSON Schema validity, exact ordered tool correctness, Recall@5, nDCG@10, citation-reference validity, claim support, task completion and exception rate.
-- Deterministic baseline/regressed fixtures, bounded loopback/HTTPS targets and an optional real LLM provider adapter.
-- React dashboards, run progress, dataset inspection, release comparison, failed trace investigation, citation evidence, policy editor and responsive dark/light themes.
+## Configuration
 
-Real PostgreSQL testing killed a test-owned worker after one checkpoint, then recovered without duplicate cases; two concurrent workers could not own the same job. Local React and browser checks passed. Current Docker/CI evidence is in [TEST_REPORT](docs/TEST_REPORT.md). Live Groq execution is now verified separately in [Cloud delivery](docs/CLOUD_DELIVERY.md); mock transport tests remain unit tests.
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL URL; defaults to local SQLite demo mode |
+| `ADMIN_TOKEN` | Required operator bearer token |
+| `LOCAL_TARGET_URL` | Loopback HTTP typed-trace endpoint |
+| `REMOTE_TARGET_URL` / `REMOTE_TARGET_TOKEN` | Configured HTTPS endpoint and optional credential |
+| `LLM_BASE_URL` / `LLM_MODEL` / `LLM_API_KEY` | Provider endpoint, model and server-side secret |
+| `POSTGRES_PASSWORD` / `APP_PORT` | Compose database secret / loopback port (8002) |
 
-```mermaid
-flowchart LR
-    UI[React evaluation studio] --> API[FastAPI]
-    API --> PG[PostgreSQL datasets and queue]
-    PG --> Worker[Lease-based worker]
-    Worker --> Target[Fixture / HTTP / LLM provider]
-    Target --> Metrics[Typed trace and deterministic evaluators]
-    Metrics --> Checkpoint[Atomic case checkpoint]
-    Checkpoint --> PG
-    PG --> Gates[Stored policy and regression comparisons]
-    Gates --> UI
+Keep credentials in environment variables or ignored `.env` files. Never put provider keys, database credentials or operator tokens in frontend build variables or Git.
+
+## Deployment
+
+The live frontend and backend share one Vercel project. `vercel.json` builds React, copies assets to `public`, and deploys the FastAPI entrypoint. Neon provides PostgreSQL; the configured integrations use free plans.
+
+```powershell
+# From the linked project, after configuring production secrets and migrations:
+vercel deploy --prod --scope kanishkar843s-projects
 ```
 
-## Testing and release gates
+For local containers, configure the required `.env` values, then:
+
+```powershell
+docker compose up --build -d --wait
+docker compose down
+```
+
+Omit `-v` when stopping containers to retain database data. Windows virtual environments cannot be reused inside WSL; use containers or create a Linux environment. See [Windows/Docker setup](docs/DEPLOYMENT.md) and [Vercel configuration](docs/CLOUD_DELIVERY.md).
+
+For a continuous local/container worker, use `python -m app.worker` or `docker compose --profile worker up -d`. The deployed free-tier workflow uses the authenticated worker-step control instead.
+
+## Reproduce the checks
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
-.\.venv\Scripts\python.exe -m pytest -q integration
 npm run typecheck --prefix frontend
 npm run lint --prefix frontend
 npm test --prefix frontend
 npm run build --prefix frontend
+.\.venv\Scripts\python.exe -m pytest -q integration
 .\.venv\Scripts\python.exe tests/browser_journey.py
-.\.venv\Scripts\python.exe -m app.cli --target fixture-baseline
-.\.venv\Scripts\python.exe -m app.cli --target fixture-regressed
 ```
 
-The baseline exits 0; the deliberately regressed target exits 1. That block is expected product behavior, not a failed software test. `python -m app.cli --baseline RUN_ID --candidate RUN_ID` also blocks decreases in benefit metrics, increases in exception rate, or an absolute candidate-policy failure. Integration requires an isolated real PostgreSQL TEST_DATABASE_URL and never substitutes SQLite.
+The integration suite requires an isolated real PostgreSQL `TEST_DATABASE_URL`; it never substitutes SQLite. The local browser harness owns a temporary fixture server. Production browser evidence is recorded separately in the cloud report.
 
-Fixture baselines score 1 on the six original benefit gates; the deliberately regressed fixture scores 0. These values are calculated from the supplied traces, not production statistics. Grounding checks are lexical/numeric/negation heuristics, not definitive hallucination detection. No unobserved token usage, cost or latency is invented.
+`python -m app.cli --target fixture-baseline` exits 0; `--target fixture-regressed` exits 1. A failing gate is expected behavior for the regressed target. `--baseline RUN_ID --candidate RUN_ID` also checks relative regressions.
 
-## Configuration and Docker
+## Known limits
 
-| Variable | Meaning |
-|---|---|
-| DATABASE_URL | PostgreSQL SQLAlchemy URL; default local SQLite demo |
-| ADMIN_TOKEN | Required operator bearer token |
-| POSTGRES_PASSWORD | Required Compose database secret |
-| APP_PORT | Loopback host port, default 8002 |
-| LOCAL_TARGET_URL | Loopback HTTP typed-trace endpoint |
-| REMOTE_TARGET_URL / REMOTE_TARGET_TOKEN | Configured HTTPS typed-trace endpoint and optional secret |
-| LLM_BASE_URL / LLM_MODEL / LLM_API_KEY | Optional HTTPS chat-completions provider |
+- The recorded Groq target failed its quality gate; it is not certified as a passing release target.
+- Vercel executes authenticated bounded worker steps. An unattended continuous worker is not configured there.
+- Real PostgreSQL acceptance tested killed-worker recovery and concurrent ownership; this is not a production reliability SLA.
+- Grounding heuristics are inspectable estimates, not definitive hallucination detection.
+- Operator authorization uses a shared bearer secret; this is not a multi-tenant identity system.
 
-`docker compose up --build -d --wait` starts PostgreSQL and the API. `docker compose --profile worker up -d` additionally starts a continuous worker. `docker compose down` stops the stack; omit `-v` to retain evidence. Keep secrets in the environment or ignored `.env`, never Git. The application is a single-operator local studio, not a multi-tenant identity service.
+## Documentation and provenance
 
-[Architecture](docs/ARCHITECTURE.md) · [Schema](docs/DATABASE_ERD.md) · [Metrics](docs/METRICS.md) · [Trace schema](docs/TRACE_SCHEMA.md) · [API](docs/API_REFERENCE.md) · [Deployment](docs/DEPLOYMENT.md) · [Resume verification](docs/RESUME_VERIFICATION.md) · [Attribution](docs/DEPENDENCIES_AND_ATTRIBUTION.md)
+[Architecture](docs/ARCHITECTURE.md) · [Database schema](docs/DATABASE_ERD.md) · [API reference](docs/API_REFERENCE.md) · [Environment](docs/ENVIRONMENT_REPORT.md) · [Security](docs/SECURITY.md) · [Dependencies and attribution](docs/DEPENDENCIES_AND_ATTRIBUTION.md) · [Original specification](docs/MASTER_PROMPT.md)
 
-Destination: https://github.com/Kanishkar843/EvalTrace-. Delivery uses a feature branch preserving remote main. First-party source and designs were authored for this assignment; dependencies retain their notices. No project license is assigned without the owner's choice.
+First-party application code, interface designs and fixtures are original to this project. Dependencies and model artifacts retain their third-party notices. No first-party project license has been selected.
 
-## GitHub delivery
-
-Published branch: `feat/durable-evaluation-react`. [Review pull request](https://github.com/Kanishkar843/EvalTrace-/pull/1) · [Current CI results](https://github.com/Kanishkar843/EvalTrace-/actions). Main was not force-pushed or overwritten. Local acceptance evidence is recorded separately from GitHub checks.
+Development is published on `feat/durable-evaluation-react` through [PR #1](https://github.com/Kanishkar843/EvalTrace-/pull/1), preserving existing `main` history. Deployment status, software acceptance and evaluated-model quality are reported separately.
