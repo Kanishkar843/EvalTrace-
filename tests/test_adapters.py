@@ -12,6 +12,7 @@ def test_provider_structured_trace_observed_usage(monkeypatch):
     def handler(request):
         data = json.loads(request.content)
         assert data["response_format"]["type"] == "json_schema"
+        assert json.loads(data["messages"][1]["content"])["output_schema"] == case.output_schema
         return httpx.Response(
             200,
             json={

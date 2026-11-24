@@ -1,3 +1,4 @@
+from .hosting import database_url
 import os, json, hashlib, time
 from uuid import uuid4
 from datetime import datetime, timezone
@@ -13,7 +14,7 @@ def now():
 class Engine:
     def __init__(self, url=None):
         self.db = create_engine(
-            url or os.getenv("DATABASE_URL", "sqlite:///./evaltrace.db")
+            database_url(url or os.getenv("DATABASE_URL", "sqlite:///./evaltrace.db"))
         )
 
     def migrate(self):

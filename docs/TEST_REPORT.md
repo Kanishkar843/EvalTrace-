@@ -25,3 +25,7 @@ Browser tests exercise unauthorized access, suite registration, durable run laun
 One upstream Starlette warning reports deprecation of its HTTPX TestClient integration; tests pass. The initial test invocation used the wrong working directory and failed collection; rerunning from the documented project root resolved it. No failed run is counted as a passing test. Live-provider usage/cost is not invented; fixture durations are not LLM latency benchmarks. docker-test-output.txt and postgres-test-output.txt preserve service evidence.
 
 Published branch: `feat/durable-evaluation-react`; [PR](https://github.com/Kanishkar843/EvalTrace-/pull/1), [Actions](https://github.com/Kanishkar843/EvalTrace-/actions). Existing remote main is an ancestor of the delivered branch. No force push or main overwrite occurred.
+
+## Production verification — 2026-11-24
+
+See [CLOUD_DELIVERY](CLOUD_DELIVERY.md) for actual Vercel, Neon, provider, browser and model results. Earlier local results above retain their original scope.

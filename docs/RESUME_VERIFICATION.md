@@ -9,4 +9,4 @@
 | Durable API reliability | PostgreSQL checkpoints, leases and owner fencing | real killed-worker recovery and concurrent claim test |
 | Docker reproducibility | nonroot API, database health, startup migrations | see current TEST_REPORT and docker-test-output.txt |
 
-No production reliability, live-provider result, semantic-entailment judge or unobserved token/cost measurement is claimed. Screenshots are from the actual React application with synthetic fixtures.
+Real Groq execution and 2,318 observed tokens are recorded in production-provider-result.json; the tested provider target failed its quality gate (structured validity 2/3, tool accuracy 0). No production reliability, semantic-entailment judge or unobserved cost measurement is claimed. Screenshots are from the actual React application with synthetic fixtures.

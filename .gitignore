@@ -7,3 +7,9 @@ __pycache__/
 node_modules/
 
 frontend/dist/
+
+.env.*
+.vercel/
+public/
+.vercel
+.env*

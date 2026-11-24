@@ -1,5 +1,12 @@
 # EvalTrace
 
+[Open live application](https://evaltrace-liart.vercel.app) · [Interactive API](https://evaltrace-liart.vercel.app/docs) · [Cloud verification](docs/CLOUD_DELIVERY.md)
+
+Production uses Neon PostgreSQL for immutable datasets, traces, durable queues and checkpoints. Authenticated worker steps execute queued jobs within bounded requests. Groq GPT-OSS 20B is available as an evaluation target; a live target can fail quality gates without being hidden or relabeled as a passing fixture.
+
+![Verified production interface](docs/assets/production-desktop.png)
+
+
 An original evaluation studio for versioned datasets, durable execution, typed traces and reproducible release gates.
 
 React/TypeScript presents stored run progress, metric scorecards, baseline/candidate comparisons, failure evidence and gate-policy editing. FastAPI and PostgreSQL persist execution checkpoints; workers recover interrupted jobs using expiring leases and ownership checks. Offline fixture mode is complete without provider credentials.
@@ -31,7 +38,7 @@ Open http://127.0.0.1:8002. Connect with the local token, register the synthetic
 - Deterministic baseline/regressed fixtures, bounded loopback/HTTPS targets and an optional real LLM provider adapter.
 - React dashboards, run progress, dataset inspection, release comparison, failed trace investigation, citation evidence, policy editor and responsive dark/light themes.
 
-Real PostgreSQL testing killed a test-owned worker after one checkpoint, then recovered without duplicate cases; two concurrent workers could not own the same job. Local React and browser checks passed. Current Docker/CI evidence is in [TEST_REPORT](docs/TEST_REPORT.md). Live-provider execution is blocked by absent credentials; mock transport tests are not live inference.
+Real PostgreSQL testing killed a test-owned worker after one checkpoint, then recovered without duplicate cases; two concurrent workers could not own the same job. Local React and browser checks passed. Current Docker/CI evidence is in [TEST_REPORT](docs/TEST_REPORT.md). Live Groq execution is now verified separately in [Cloud delivery](docs/CLOUD_DELIVERY.md); mock transport tests remain unit tests.
 
 ```mermaid
 flowchart LR
