@@ -1,0 +1,17 @@
+{
+  "status": "PASSED",
+  "frontend": "React TypeScript",
+  "backend": "SQLite deterministic traces; PostgreSQL recovery tested separately",
+  "checks": [
+    "authorization rejection",
+    "baseline pass",
+    "regressed gate block",
+    "comparison",
+    "failed trace evidence",
+    "policy save",
+    "JSONL validation",
+    "JSONL import",
+    "dark/light/mobile"
+  ],
+  "page_errors": []
+}

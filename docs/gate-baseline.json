@@ -1,0 +1,48 @@
+{
+  "run_id": "b980de8f-04b6-4d21-9f6a-f28830aa4bdd",
+  "scores": {
+    "structured_validity": 1.0,
+    "tool_accuracy": 1.0,
+    "recall_at_5": 1.0,
+    "ndcg_at_10": 1.0,
+    "citation_reference_validity": 1.0,
+    "grounded_token_overlap": 1.0,
+    "task_completion": 1.0,
+    "exception_rate": 0.0
+  },
+  "gate": {
+    "passed": true,
+    "checks": {
+      "structured_validity": {
+        "value": 1.0,
+        "floor": 1.0,
+        "passed": true
+      },
+      "tool_accuracy": {
+        "value": 1.0,
+        "floor": 1.0,
+        "passed": true
+      },
+      "recall_at_5": {
+        "value": 1.0,
+        "floor": 0.8,
+        "passed": true
+      },
+      "ndcg_at_10": {
+        "value": 1.0,
+        "floor": 0.8,
+        "passed": true
+      },
+      "citation_reference_validity": {
+        "value": 1.0,
+        "floor": 1.0,
+        "passed": true
+      },
+      "task_completion": {
+        "value": 1.0,
+        "floor": 1.0,
+        "passed": true
+      }
+    }
+  }
+}

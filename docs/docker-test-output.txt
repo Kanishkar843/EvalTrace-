@@ -1,0 +1,3 @@
+ Container evaltrace-acceptance-api-1 Restarting 
+ Container evaltrace-acceptance-api-1 Started 
+{"database": "PostgreSQL", "queue_after_restart": "passed", "baseline": "passed", "intentional_regression": "blocked as expected", "comparison": "passed", "CLI_exit_codes": [0, 1]}
