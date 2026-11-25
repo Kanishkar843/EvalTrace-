@@ -8,6 +8,12 @@
 
 EvalTrace is an evaluation studio for immutable datasets, typed traces and reproducible release decisions. PostgreSQL stores durable jobs and per-case checkpoints, while the interface exposes model outputs, tool calls, retrieval evidence, metric scores and baseline/candidate regressions.
 
+## Interface redesign
+
+An indigo glass control room with a persistent side rail, a dedicated landing page, Evaluation runs, Dataset library, Release comparison, and Gate policies. Export observed run results as JSON without changing their scores.
+
+![New EvalTrace landing page](docs/assets/landing.png)
+
 ## Production preview
 
 ![EvalTrace running on Vercel](docs/assets/production-desktop.png)
