@@ -29,3 +29,7 @@ Published branch: `feat/durable-evaluation-react`; [PR](https://github.com/Kanis
 ## Production verification — 2026-11-24
 
 See [CLOUD_DELIVERY](CLOUD_DELIVERY.md) for actual Vercel, Neon, provider, browser and model results. Earlier local results above retain their original scope.
+
+## Frontend redesign — 2026-11-25
+
+Distinct landing pages, dedicated navigation, functional exports and responsive glass interfaces verified locally and in production. See [redesign evidence](FRONTEND_REDESIGN.md).

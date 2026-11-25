@@ -12,13 +12,13 @@ EvalTrace is an evaluation studio for immutable datasets, typed traces and repro
 
 An indigo glass control room with a persistent side rail, a dedicated landing page, Evaluation runs, Dataset library, Release comparison, and Gate policies. Export observed run results as JSON without changing their scores.
 
-![New EvalTrace landing page](docs/assets/landing.png)
+![New EvalTrace landing page](docs/assets/production-landing.png)
 
 ## Production preview
 
 ![EvalTrace running on Vercel](docs/assets/production-desktop.png)
 
-Captured from the deployed application. The galleries below show separately captured local test journeys.
+Captured from the redesigned application deployed on 25 November 2026. The galleries below show separately captured local test journeys.
 
 <details>
 <summary>View light theme and mobile screenshots</summary>
@@ -199,3 +199,5 @@ The integration suite requires an isolated real PostgreSQL `TEST_DATABASE_URL`; 
 First-party application code, interface designs and fixtures are original to this project. Dependencies and model artifacts retain their third-party notices. No first-party project license has been selected.
 
 Development is published on `feat/durable-evaluation-react` through [PR #1](https://github.com/Kanishkar843/EvalTrace-/pull/1), preserving existing `main` history. Deployment status, software acceptance and evaluated-model quality are reported separately.
+
+[Frontend redesign and verification](docs/FRONTEND_REDESIGN.md)
